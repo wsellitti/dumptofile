@@ -4,13 +4,15 @@
 # See LICENSE of Terminator package.
 
 """
-dump_to_file.py - Terminator Plugin to save text content of individual terminals to ~/.terminator directory.
+dump_to_file.py - Terminator Plugin to save text content of individual terminals to ~/.local/share/terminator directory, per xdg specification.
 Does not need annoying explicit starting of logging like the official "logger" plugin, but will also save only
 data thats currently in the scrollback buffer.(so better increase the default buffer size - Preferences->Profiles->Scrolling)
 """
 
 import os
 import sys
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import terminatorlib.plugin as plugin
 from terminatorlib.translation import _
@@ -37,9 +39,9 @@ class DumpToFile(plugin.MenuItem):
         menuitems.append(item)
                         
     def dump_console(self, _widget, Terminal):
-        """ Handle menu item callback by saving console text to a predefined location and creating the ~/.terminator folder if necessary """
+        """ Handle menu item callback by saving console text to a predefined location and creating the ~/.local/share/terminator folder if necessary """
         try:
-            log_folder = os.path.expanduser("~") + "/.terminator/"
+            log_folder = os.path.expanduser("~") + "/.local/share/terminator/"
             if not os.path.exists(log_folder):
                 os.mkdir(log_folder)
             log_file = "console_" + datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')+".log"
